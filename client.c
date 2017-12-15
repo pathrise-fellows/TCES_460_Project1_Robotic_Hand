@@ -7,6 +7,21 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 
+#define size 5
+
+int fingers[size];
+int rbtfingers[size];
+char msg[256]="";
+char buffer[256];
+
+void encode(){
+    for (int i=0; i<size; i++) {
+        snprintf(buffer,sizeof(buffer),"%d",fingers[i]);
+        strcat(msg,buffer);
+        strcat(msg,"R");
+    }
+}
+
 void error(const char *msg)
 {
     perror(msg);
@@ -18,8 +33,12 @@ int main(int argc, char *argv[])
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-
-    char buffer[256];
+    fingers[0] = 10;
+    fingers[1] = 20;
+    fingers[2] = 30;
+    fingers[3] = 40;
+    fingers[4] = 50;
+    
     if (argc < 3) {
        fprintf(stderr,"usage %s hostname port\n", argv[0]);
        exit(0);
@@ -41,9 +60,9 @@ int main(int argc, char *argv[])
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
         error("ERROR connecting");
-    printf("Please enter the message: ");
     bzero(buffer,256);
-    fgets(buffer,255,stdin);
+    encode();
+    printf("Sending Message: %s\n",buffer);
     n = write(sockfd,buffer,strlen(buffer));
     if (n < 0) 
          error("ERROR writing to socket");
