@@ -17,9 +17,9 @@ char buffer[256];
 
 void decode() {
     int count = 0;
-    snprintf(buffer,sizeof(buffer),"%s","");
+    snprintf(msg,sizeof(msg),"%s","");
     char *pch;
-    pch = strtok(msg,"RE");
+    pch = strtok(buffer,"RE");
     while (pch !=NULL) {
         rbtfingers[count] = atoi(pch);
         count++;
