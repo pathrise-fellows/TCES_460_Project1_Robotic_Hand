@@ -16,9 +16,9 @@ char buffer[256];
 
 void encode(){
     for (int i=0; i<size; i++) {
-        snprintf(buffer,sizeof(buffer),"%d",fingers[i]);
-        strcat(msg,buffer);
-        strcat(msg,"R");
+        snprintf(msg,sizeof(msg),"%d",fingers[i]);
+        strcat(buffer,msg);
+        strcat(buffer,"R");
     }
 }
 
