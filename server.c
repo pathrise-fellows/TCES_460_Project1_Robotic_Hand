@@ -8,6 +8,25 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#define size 5
+
+int fingers[size];
+int rbtfingers[size];
+char msg[256]="";
+char buffer[256];
+
+void decode() {
+    int count = 0;
+    snprintf(buffer,sizeof(buffer),"%s","");
+    char *pch;
+    pch = strtok(msg,"RE");
+    while (pch !=NULL) {
+        rbtfingers[count] = atoi(pch);
+        count++;
+        pch = strtok(NULL,"R");
+    }
+}
+
 void error(const char *msg)
 {
     perror(msg);
@@ -18,7 +37,7 @@ int main(int argc, char *argv[])
 {
      int sockfd, newsockfd, portno;
      socklen_t clilen;
-     char buffer[256];
+     
      struct sockaddr_in serv_addr, cli_addr;
      int n;
      if (argc < 2) {
@@ -47,6 +66,10 @@ int main(int argc, char *argv[])
      n = read(newsockfd,buffer,255);
      if (n < 0) error("ERROR reading from socket");
      printf("Here is the message: %s\n",buffer);
+     decode();
+     for (int i=0; i<size; i++) {
+        printf("%d\n",rbtfingers[i]);
+     }
      n = write(newsockfd,"I got your message",18);
      if (n < 0) error("ERROR writing to socket");
      close(newsockfd);
