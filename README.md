@@ -3,7 +3,11 @@
 
 ## Resources
 
+### Socket
+
 * http://www.linuxhowtos.org/C_C++/socket.htm
+
+### Flex Sensor
 
 * https://www.sparkfun.com/products/10264
 
