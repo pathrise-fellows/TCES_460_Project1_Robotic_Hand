@@ -42,3 +42,26 @@ Quick Start:
 DataSheet:
 
 * https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/downloads
+
+## Work Division:
+
+### Glove
+
+* David Vercillo
+
+### Hand
+
+* Blank
+
+### Networking
+
+* Blank
+
+* C
+
+* C++
+
+* Python
+
+### Physical Build
+
