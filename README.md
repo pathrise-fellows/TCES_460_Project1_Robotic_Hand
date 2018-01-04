@@ -11,11 +11,11 @@
 
 * https://www.sparkfun.com/products/10264
 
-#### DataSheet
+DataSheet
 
 * https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/FLEX%20SENSOR%20DATA%20SHEET%202014.pdf
 
-#### Quick Start
+Quick Start
 
 * https://learn.sparkfun.com/tutorials/flex-sensor-hookup-guide
 
@@ -23,14 +23,14 @@
 
 * https://www.sparkfun.com/products/8712
 
-#### Manual
+Manual
 
 * https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/FLX-FlexiForce-Sensors-Manual.pdf
 
-#### DataSheet
+DataSheet
 
 * https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/FLX-A201-A.pdf
 
-#### Quick Start
+Quick Start
 
 * https://learn.sparkfun.com/tutorials/force-sensitive-resistor-hookup-guide
