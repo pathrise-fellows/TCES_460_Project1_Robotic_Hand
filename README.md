@@ -34,3 +34,11 @@ DataSheet:
 Quick Start:
 
 * https://learn.sparkfun.com/tutorials/force-sensitive-resistor-hookup-guide
+
+### IMU:
+
+* https://www.adafruit.com/product/2472
+
+DataSheet:
+
+https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/downloads
