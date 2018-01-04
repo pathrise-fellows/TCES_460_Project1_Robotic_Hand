@@ -41,4 +41,4 @@ Quick Start:
 
 DataSheet:
 
-https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/downloads
+* https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/downloads
