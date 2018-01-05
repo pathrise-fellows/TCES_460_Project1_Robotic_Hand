@@ -3,6 +3,10 @@
 
 ## Resources
 
+### 8 Channel 10-bit ADC
+
+* https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
+
 ### Socket:
 
 * http://www.linuxhowtos.org/C_C++/socket.htm
