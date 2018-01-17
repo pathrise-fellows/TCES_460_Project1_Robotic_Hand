@@ -19,6 +19,8 @@
 #include <mcp3004.h>
 #include "LSM9DS1.h"
 #include "LSM9DS1_Types.h"
+#include <softPwm.h>
+
 const int max_data_size = 4096;
 
 using std::cout;
@@ -47,11 +49,12 @@ LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 int R_DIV = 47000;
 
 
-const float STR_R = {14038,8000,8000,8000,8000};
-const float BEND_R = {68000,40000,40000,40000,40000};
+const float STR_R[5]= {14038,8000,8000,8000,8000};
+const float BEND_R[5] = {68000,40000,40000,40000,40000};
 const int PWM[5] = {25,24,23,22,21};
 float flex_data[5];
 float flex_voltage[5];
+float resistance[5];
 int buzzer_val[5];
 
 
@@ -168,7 +171,7 @@ void calc_voltage(int size) {
 
 void calc_resistance(int size) {
 	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0)/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0)/flex_voltage[i] - 1.0);
 	}
 }
 
@@ -181,7 +184,7 @@ void calc_angle(int size) {
 void calc_all(int size) {
 	for (int i=0; i<size; i++) {
 		flex_voltage[i] = flex_data[i]*(5.0)/1023.0;
-		resistance[i] = R_DIV*(5.0)/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0)/flex_voltage[i] - 1.0);
 		flex_array[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
 	}
 }
