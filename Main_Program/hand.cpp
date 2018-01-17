@@ -24,7 +24,7 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmcreate(PWM[i],0,50);
+		softPwmcreate(PWM[i],0,50); 
 	}
 }
 
@@ -36,9 +36,9 @@ void servo_write(int size) {
 	
 }
 
-void pressure_read(int BASE) {
+void pressure_read(int base) {
 	for (int i=0; i<5; i++) {
-		pressure_data[i] = analogRead(BASE+i);
+		pressure_data[i] = analogRead(base+i);
 	}
 }
 
