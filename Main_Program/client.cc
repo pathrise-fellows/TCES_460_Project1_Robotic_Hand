@@ -40,7 +40,7 @@ float press_array [5];
 
 float pressure_data[5];
 int servo_val[6];
-int PWM = {25,24,23,22,21};
+int PWM[5] = {25,24,23,22,21};
 int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
