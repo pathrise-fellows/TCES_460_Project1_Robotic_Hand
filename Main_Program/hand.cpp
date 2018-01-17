@@ -7,7 +7,7 @@
 
 float pressure_data[5];
 int servo_val[6];
-int PWM = {25,24,23,22,21};
+int PWM[5] = {25,24,23,22,21};
 int R_DIV = 3220;
 float resistance[5];
 float pressure [5];
@@ -50,14 +50,14 @@ void calc_voltage(int size) {
 
 void calc_resistance(int size) {
 	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0)/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
 	}
 }
 void calc_pressure(int size) {
 	for (int i =0; i<size; i++) {
 		float fsrG = 1.0/resistance[i];
 		if (resistance[i] <=600) {
-			pressure[i] = fsrG - 0.00075)/ 0.00000032639;
+			pressure[i] = (fsrG - 0.00075)/ 0.00000032639;
 		}
 		else {
 			pressure[i] = fsrG / 0.000000642857;
@@ -68,10 +68,10 @@ void calc_pressure(int size) {
 void calc_all(int size) {
 	for (int i =0; i<size; i++) {
 		voltage[i] = pressure_data[i]*(5.0)/1023.0;
-		resistance[i] = R_DIV*(5.0)/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
 		float fsrG = 1.0/resistance[i];
 		if (resistance[i] <=600) {
-			pressure[i] = fsrG - 0.00075)/ 0.00000032639;
+			pressure[i] = (fsrG - 0.00075)/ 0.00000032639;
 		}
 		else {
 			pressure[i] = fsrG / 0.000000642857;
