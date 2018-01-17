@@ -1,5 +1,9 @@
-#include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
+#include <time.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 #include <mcp3004.h>
