@@ -16,14 +16,16 @@
 #include <mcp3004.h>
 #include <softPwm.h>
 
+#define BASE 100
+#define SPI_CHAN 0
+
 const int max_data_size = 4096;
 
 using std::cout;
 using std::endl;
 using std::cerr;
 
-#define BASE 100
-#define SPI_CHAN 0
+
 
 int sock , n;
 struct sockaddr_in server, from;
@@ -183,14 +185,14 @@ void calc_voltage(int size) {
 
 void calc_resistance(int size) {
 	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0)/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
 	}
 }
 void calc_pressure(int size) {
 	for (int i =0; i<size; i++) {
 		float fsrG = 1.0/resistance[i];
 		if (resistance[i] <=600) {
-			press_array[i] = fsrG - 0.00075)/ 0.00000032639;
+			press_array[i] = (fsrG - 0.00075)/ 0.00000032639;
 		}
 		else {
 			press_array[i] = fsrG / 0.000000642857;
@@ -201,10 +203,10 @@ void calc_pressure(int size) {
 void calc_all(int size) {
 	for (int i =0; i<size; i++) {
 		voltage[i] = pressure_data[i]*(5.0)/1023.0;
-		resistance[i] = R_DIV*(5.0)/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
 		float fsrG = 1.0/resistance[i];
 		if (resistance[i] <=600) {
-			press_array[i] = fsrG - 0.00075)/ 0.00000032639;
+			press_array[i] = (fsrG - 0.00075)/ 0.00000032639;
 		}
 		else {
 			press_array[i] = fsrG / 0.000000642857;
