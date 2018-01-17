@@ -16,8 +16,8 @@
 #include <mcp3004.h>
 #include <softPwm.h>
 
-#define BASE 100
-#define SPI_CHAN 0
+const int BASE = 100;
+const int SPI_CHAN = 0;
 
 const int max_data_size = 4096;
 
