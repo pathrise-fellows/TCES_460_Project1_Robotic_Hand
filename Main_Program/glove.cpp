@@ -21,7 +21,7 @@ int R_DIV = 47000;
 
 const float STR_R = {14038,8000,8000,8000,8000};
 const float BEND_R = {68000,40000,40000,40000,40000};
-
+const int PWM[5] = {25,24,23,22,21};
 float angle[5];
 float flex_data[5];
 float flex_voltage[5];
@@ -44,9 +44,17 @@ void servo_setup(int size) {
 	}
 }
 
-void flex_read(int BASE) {
+void servo_write(int size) {
+	
+	for (int i=0; i<size; i++) {
+		softPwmwrite(PWM[i],servo_val[i]);
+	}
+	
+}
+
+void flex_read(int base) {
 	for (int i=0; i<5; i++) {
-		flex_data[i] = analogRead(BASE+i);
+		flex_data[i] = analogRead(base+i);
 	}
 }
 
