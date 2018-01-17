@@ -70,7 +70,7 @@ void calc_voltage(int size) {
 
 void calc_resistance(int size) {
 	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0/flex_voltage[i] - 1.0);
 	}
 }
 
