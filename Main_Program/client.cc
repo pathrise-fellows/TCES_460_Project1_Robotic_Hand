@@ -25,8 +25,6 @@ using std::cout;
 using std::endl;
 using std::cerr;
 
-
-
 int sock , n;
 struct sockaddr_in server, from;
 demo::Hand hand_data;
@@ -48,7 +46,6 @@ float resistance[5];
 float voltage[5];
 
 void error(const char *msg){
-
       perror(msg);
      exit(0);
 }
@@ -169,9 +166,9 @@ void servo_write(int size) {
 	}
 }
 
-void pressure_read(int BASE) {
+void pressure_read(int base) {
 	for (int i=0; i<5; i++) {
-		pressure_data[i] = analogRead(BASE+i);
+		pressure_data[i] = analogRead(base+i);
 	}
 }
 
@@ -217,13 +214,13 @@ int main(void){
     sever_setup();
     hand_setup();
     fResistor_set();
-	wiringPiSetup();
-	int check;
-	check = mcp3004Setup(BASE,SPI_CHAN);
-	if (check == -1) {
-		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
-        	exit(EXIT_FAILURE);
-	}
+    wiringPiSetup();
+    int check;
+    check = mcp3004Setup(BASE,SPI_CHAN);
+    if (check == -1) {
+	fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
+	exit(EXIT_FAILURE);
+    }
     send_data();
     receive();
     pressure_sensor_print();
