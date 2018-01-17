@@ -12,6 +12,7 @@
 #include <mcp3004.h>
 #include "LSM9DS1.h"
 #include "LSM9DS1_Types.h"
+#include <softPwm.h>
 //#include <mcp3008.h>
 
 LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
