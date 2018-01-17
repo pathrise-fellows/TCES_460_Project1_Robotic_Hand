@@ -31,7 +31,7 @@ void servo_setup(int size) {
 void servo_write(int size) {
 	
 	for (int i=0; i<size; i++) {
-		softPwmwrite(PWM[i],servo_val[i])
+		softPwmwrite(PWM[i],servo_val[i]);
 	}
 	
 }
