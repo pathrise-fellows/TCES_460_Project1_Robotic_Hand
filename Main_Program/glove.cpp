@@ -41,14 +41,14 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmcreate(PWM[i],0,50);
+		softPwmCreate(PWM[i],0,50);
 	}
 }
 
 void servo_write(int size) {
 	
 	for (int i=0; i<size; i++) {
-		softPwmwrite(PWM[i],servo_val[i]);
+		softPwmWrite(PWM[i],servo_val[i]);
 	}
 	
 }
