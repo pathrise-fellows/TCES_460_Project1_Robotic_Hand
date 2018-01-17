@@ -9,6 +9,13 @@
 #include <string.h>
 
 #include "Hand.pb.h"
+
+#include <errno.h>
+#include <wiringPi.h>
+#include <wiringPiSPI.h>
+#include <mcp3004.h>
+#include <softPwm.h>
+
 const int max_data_size = 4096;
 
 using std::cout;

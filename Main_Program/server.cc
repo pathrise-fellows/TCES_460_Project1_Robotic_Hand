@@ -11,6 +11,14 @@
 #include <iostream>
 
 #include "Hand.pb.h"
+
+#include <time.h>
+#include <sys/time.h>
+#include <wiringPi.h>
+#include <wiringPiSPI.h>
+#include <mcp3004.h>
+#include "LSM9DS1.h"
+#include "LSM9DS1_Types.h"
 const int max_data_size = 4096;
 
 using std::cout;
