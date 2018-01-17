@@ -10,8 +10,8 @@
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 #include <mcp3004.h>
-#include "LSM9DS1.h"
-#include "LSM9DS1_Types.h"
+#include <LSM9DS1.h>
+#include <LSM9DS1_Types.h>
 #include <softPwm.h>
 //#include <mcp3008.h>
 
