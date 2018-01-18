@@ -14,7 +14,10 @@
 
 #include <time.h>
 #include <sys/time.h>
-
+#include <wiringPi.h>
+#include <wiringPiSPI.h>
+#include <mcp3004.h>
+#include <softPwm.h>
 
 const int max_data_size = 4096;
 
@@ -38,7 +41,16 @@ float mag_array [3];
 
 float press_array [5] = {0.14,1.14,2.14,3.14,4.14};
 
+const int BASE = 100;
+const int SPI_CHAN = 0;
 
+
+float pressure_data[5];
+int servo_val[6];
+int PWM[5] = {25,24,23,22,21};
+int R_DIV = 3220;
+float resistance[5];
+float voltage[5];
 
 
 
@@ -142,14 +154,60 @@ void servo_write(int size) {
 	}
 }
 
+void pressure_read(int base) {
+	for (int i=0; i<5; i++) {
+		pressure_data[i] = analogRead(base+i);
+	}
+}
 
+void calc_voltage(int size) {
+	for (int i=0; i<size; i++) {
+		voltage[i] = pressure_data[i]*(5.0)/1023.0;
+	}
+}
+
+void calc_resistance(int size) {
+	for (int i=0; i<size; i++) {
+		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
+	}
+}
+void calc_pressure(int size) {
+	for (int i =0; i<size; i++) {
+		float fsrG = 1.0/resistance[i];
+		if (resistance[i] <=600) {
+			press_array[i] = (fsrG - 0.00075)/ 0.00000032639;
+		}
+		else {
+			press_array[i] = fsrG / 0.000000642857;
+		}
+	}
+}
+
+void calc_all(int size) {
+	for (int i =0; i<size; i++) {
+		voltage[i] = pressure_data[i]*(5.0)/1023.0;
+		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
+		float fsrG = 1.0/resistance[i];
+		if (resistance[i] <=600) {
+			press_array[i] = (fsrG - 0.00075)/ 0.00000032639;
+		}
+		else {
+			press_array[i] = fsrG / 0.000000642857;
+		}
+	}
+}
 int main(void){
    	GOOGLE_PROTOBUF_VERIFY_VERSION;
    	server_setup();
     	glove_setup();
     	glove_set();
 	wiringPiSetup();
-   	
+   	int check;
+    	check = mcp3004Setup(BASE,SPI_CHAN);
+    	if (check == -1) {
+		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
+		exit(EXIT_FAILURE);
+   	}
 	
 	for (int i=0; i<100; i++) {
 		send_data();
