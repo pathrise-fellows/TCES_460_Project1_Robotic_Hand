@@ -11,7 +11,12 @@
 #include "Hand.pb.h"
 
 #include <errno.h>
-
+#include <wiringPi.h>
+#include <wiringPiSPI.h>
+#include <mcp3004.h>
+#include <LSM9DS1.h>
+#include <LSM9DS1_Types.h>
+#include <softPwm.h>
 
 
 
@@ -33,7 +38,18 @@ float gArray [3]= {1.23f,2.23f,3.23f};
 float mArray [3]= {1.23f,2.23f,3.23f};
 float press_array [5];
 
+LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
+int R_DIV = 47000;
+
+const float STR_R[5]= {14038,8000,8000,8000,8000};
+const float BEND_R[5] = {68000,40000,40000,40000,40000};
+const int PWM[5] = {25,24,23,22,21};
+float flex_data[5];
+float flex_voltage[5];
+float resistance[5];
+float buzzer_val[5];
+int servo_val[5];
 
 
 void error(const char *msg){
@@ -157,6 +173,55 @@ void servo_write(int size) {
 	}
 }
 
+void flex_read(int base) {
+	for (int i=0; i<5; i++) {
+		flex_data[i] = analogRead(base+i);
+	}
+}
+
+void calc_voltage(int size) {
+	for (int i=0; i<size; i++) {
+		flex_voltage[i] = flex_data[i]*(5.0)/1023.0;
+	}
+}
+
+void calc_resistance(int size) {
+	for (int i=0; i<size; i++) {
+		resistance[i] = R_DIV*(5.0/flex_voltage[i] - 1.0);
+	}
+}
+
+void calc_angle(int size) {
+	for (int i=0; i<size; i++) {
+		flex_array[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
+	}
+}
+
+void calc_all(int size) {
+	for (int i=0; i<size; i++) {
+		flex_voltage[i] = flex_data[i]*(5.0)/1023.0;
+		resistance[i] = R_DIV*(5.0/flex_voltage[i] - 1.0);
+		flex_array[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
+	}
+}
+
+void imu_read() {
+		while (!imu.gyroAvailable()) ;
+        imu.readGyro();
+		gyro_array[0] = imu.calcGyro(imu.gx);
+		gyro_array[1] = imu.calcGyro(imu.gy);
+		gyro_array[2] = imu.calcGyro(imu.gz);
+        while(!imu.accelAvailable()) ;
+        imu.readAccel();
+		accel_array[0] = imu.calcAccel(imu.ax);
+		accel_array[1] = imu.calcAccel(imu.ay);
+		accel_array[2] = imu.calcAccel(imu.az);
+        while(!imu.magAvailable()) ;
+        imu.readMag();
+		mag_array[0] = imu.calcMag(imu.mx);
+		mag_array[1] = imu.calcMag(imu.my);
+		mag_array[2] = imu.calcMag(imu.mz);
+}
 
 
 int main(void){
@@ -165,7 +230,12 @@ int main(void){
     hand_setup();
     fResistor_set();
     wiringPiSetup();
-    
+    imu.begin();
+   	if (!imu.begin()) {
+        	fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
+        	exit(EXIT_FAILURE);
+   	}
+    	imu.calibrate();
     send_data();
     receive();
     pressure_sensor_print();
