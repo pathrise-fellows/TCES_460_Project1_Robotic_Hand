@@ -225,22 +225,24 @@ void imu_read() {
 
 
 int main(void){
-    GOOGLE_PROTOBUF_VERIFY_VERSION;
-    sever_setup();
-    hand_setup();
-    fResistor_set();
-    wiringPiSetup();
-    imu.begin();
-   	if (!imu.begin()) {
-        	fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
-        	exit(EXIT_FAILURE);
-   	}
-    	imu.calibrate();
-    send_data();
-    receive();
-    pressure_sensor_print();
-    close(sock);
-    printf("client finish\n");
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
+	sever_setup();
+	hand_setup();
+	fResistor_set();
+	wiringPiSetup();
+	imu.begin();
+	if (!imu.begin()) {
+		fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
+		exit(EXIT_FAILURE);
+	}
+	imu.calibrate();
+	for (int i=0; i<100; i++) {
+		send_data();
+		receive();
+		delay(1000);
+	}
+	close(sock);
+	printf("client finish\n");
     return 0;   
 }
 
