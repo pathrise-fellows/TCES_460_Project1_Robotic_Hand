@@ -237,6 +237,7 @@ int main(void){
 	}
 	imu.calibrate();
 	for (int i=0; i<100; i++) {
+		imu_read();
 		send_data();
 		receive();
 		delay(1000);
