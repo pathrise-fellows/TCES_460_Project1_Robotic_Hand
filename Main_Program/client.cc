@@ -242,7 +242,7 @@ int main(void){
 		//imu_read();
 		send_data();
 		receive();
-		pressure_sensor_print
+		pressure_sensor_print();
 		delay(1000);
 	}
 	close(sock);
