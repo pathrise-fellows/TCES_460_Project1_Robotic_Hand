@@ -193,7 +193,7 @@ void calc_resistance(int size) {
 
 void calc_angle(int size) {
 	for (int i=0; i<size; i++) {
-		flex_array[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
+		fArray[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
 	}
 }
 
@@ -201,26 +201,26 @@ void calc_all(int size) {
 	for (int i=0; i<size; i++) {
 		flex_voltage[i] = flex_data[i]*(5.0)/1023.0;
 		resistance[i] = R_DIV*(5.0/flex_voltage[i] - 1.0);
-		flex_array[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
+		fArray[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
 	}
 }
 
 void imu_read() {
 		while (!imu.gyroAvailable()) ;
         imu.readGyro();
-		gyro_array[0] = imu.calcGyro(imu.gx);
-		gyro_array[1] = imu.calcGyro(imu.gy);
-		gyro_array[2] = imu.calcGyro(imu.gz);
+		gArray[0] = imu.calcGyro(imu.gx);
+		gArray[1] = imu.calcGyro(imu.gy);
+		gArray[2] = imu.calcGyro(imu.gz);
         while(!imu.accelAvailable()) ;
         imu.readAccel();
-		accel_array[0] = imu.calcAccel(imu.ax);
-		accel_array[1] = imu.calcAccel(imu.ay);
-		accel_array[2] = imu.calcAccel(imu.az);
+		aArray[0] = imu.calcAccel(imu.ax);
+		aArray[1] = imu.calcAccel(imu.ay);
+		aArray[2] = imu.calcAccel(imu.az);
         while(!imu.magAvailable()) ;
         imu.readMag();
-		mag_array[0] = imu.calcMag(imu.mx);
-		mag_array[1] = imu.calcMag(imu.my);
-		mag_array[2] = imu.calcMag(imu.mz);
+		mArray[0] = imu.calcMag(imu.mx);
+		mArray[1] = imu.calcMag(imu.my);
+		mArray[2] = imu.calcMag(imu.mz);
 }
 
 
@@ -230,16 +230,19 @@ int main(void){
 	hand_setup();
 	fResistor_set();
 	wiringPiSetup();
+	/*
 	imu.begin();
 	if (!imu.begin()) {
 		fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
 		exit(EXIT_FAILURE);
 	}
 	imu.calibrate();
+	*/
 	for (int i=0; i<100; i++) {
-		imu_read();
+		//imu_read();
 		send_data();
 		receive();
+		pressure_sensor_print
 		delay(1000);
 	}
 	close(sock);
