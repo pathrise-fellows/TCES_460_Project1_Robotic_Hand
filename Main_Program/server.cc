@@ -218,11 +218,7 @@ int main(void){
 		receive();
 		delay(1000);
 	}
-	send_data();
-    	print_in();
-	receive();
     	close(sock);
     	printf("done with server\n");
-	exit(EXIT_SUCCESS);
-    return 0;
+	return 0;
 }
