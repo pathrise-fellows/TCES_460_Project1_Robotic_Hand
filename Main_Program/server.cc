@@ -52,7 +52,8 @@ int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
 
-
+const float max_pressure[5] = {8000,8000,10000,8000,11000};
+const float min_pressure[5] = {0,0,0,0,0};
 
 
 void error(const char *msg){
