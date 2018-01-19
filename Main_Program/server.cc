@@ -31,7 +31,8 @@ std::string data;
 
 struct sockaddr_in server;
 struct sockaddr_in client;
-int sock, length, n;
+int sock,n;
+unsigned int length;
 socklen_t fromlen;
 char buf[max_data_size];
 float flex_array[5];
