@@ -18,8 +18,8 @@
 #include <LSM9DS1_Types.h>
 #include <softPwm.h>
 
-const int BASE 100
-const int SPI_CHAN 0
+const int BASE = 100;
+const int SPI_CHAN = 0;
 
 const int max_data_size = 4096;
 
