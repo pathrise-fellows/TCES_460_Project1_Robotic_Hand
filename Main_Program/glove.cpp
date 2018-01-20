@@ -1,6 +1,6 @@
 //glove file
 //
-
+#include <iostream>
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
@@ -19,9 +19,11 @@ LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
 int R_DIV = 47000;
 
+using std::cout;
 
-const float STR_R[5]= {14038,8000,8000,8000,8000};
-const float BEND_R[5] = {68000,40000,40000,40000,40000};
+const float STR_R[5]= {8500,8500,12000,8000,8000};
+//			 pinky ring middle  index  thumb
+const float BEND_R[5] = {18000,21000,40000,21000,16000};
 const int PWM[5] = {25,24,23,22,21};
 int servo_val[5];
 float resistance[5];
@@ -123,12 +125,21 @@ int main() {
    	}
     imu.calibrate();
 	*/
+	pinMode(PWM[0],OUTPUT);
+	softPwmCreate(PWM[0],0,50);
 	while (1){
 		flex_read(BASE);
 		calc_all(5);
+		/*
 		for (int i =0; i<5; i++) {
-			cout << "Resistance: " << resistance[i] <<" Angle : "<< angle[i] << "i: " << i << "\n";
+			cout << "Resistance: " << resistance[i] <<" Angle : "<< angle[i] << " i: " << i << "\n";
+			
+
 		}
+		*/
+		cout << "Angle: " << angle[3] << "\n";
+		//softPwmWrite(PWM[0],(int)angle[3]);
+		softPwmWrite(PWM[0],50);
 		delay(1000);
 	}
 	/*
