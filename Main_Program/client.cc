@@ -39,7 +39,7 @@ float gArray [3]= {1.23f,2.23f,3.23f};
 float mArray [3]= {1.23f,2.23f,3.23f};
 float press_array [5];
 
-LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
+//LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
 int R_DIV = 47000;
 const float STR_R[5]= {8500,8500,12000,8000,8000};
@@ -206,7 +206,7 @@ void calc_all(int size) {
 		fArray[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
 	}
 }
-
+/*
 void imu_read() {
 		while (!imu.gyroAvailable()) ;
         imu.readGyro();
@@ -224,7 +224,7 @@ void imu_read() {
 		mArray[1] = imu.calcMag(imu.my);
 		mArray[2] = imu.calcMag(imu.mz);
 }
-
+*/
 
 int main(void){
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -238,14 +238,6 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
         	exit(EXIT_FAILURE);
 	}
-	/*
-	imu.begin();
-	if (!imu.begin()) {
-		fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
-		exit(EXIT_FAILURE);
-	}
-	imu.calibrate();
-	*/
 	for (int i=0; i<100; i++) {
 		//imu_read();
 		flex_read(BASE);
