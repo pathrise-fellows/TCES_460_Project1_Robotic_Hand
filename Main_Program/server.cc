@@ -40,7 +40,7 @@ float accel_array [3];
 float gyro_array [3];
 float mag_array [3];
 
-float press_array [5] = {0.14,1.14,2.14,3.14,4.14};
+float press_array [5] = {0.14,1.14,2.14,3.14,5555.14};
 
 const int BASE = 100;
 const int SPI_CHAN = 0;
