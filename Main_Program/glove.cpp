@@ -15,7 +15,7 @@
 #include <softPwm.h>
 //#include <mcp3008.h>
 
-LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
+//LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
 int R_DIV = 47000;
 
@@ -89,7 +89,7 @@ void calc_all(int size) {
 		angle[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
 	}
 }
-
+/*
 void imu_read() {
 		while (!imu.gyroAvailable()) ;
         imu.readGyro();
@@ -107,7 +107,7 @@ void imu_read() {
 		imu_mag[1] = imu.calcMag(imu.my);
 		imu_mag[2] = imu.calcMag(imu.mz);
 }
-
+*/
 int main() {
 	wiringPiSetup();
 	int check;
