@@ -238,7 +238,7 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
         	exit(EXIT_FAILURE);
 	}
-	for (int i=0; i<100; i++) {
+	for (int i=0; i<10; i++) {
 		//imu_read();
 		flex_read(BASE);
 		calc_all(5);
