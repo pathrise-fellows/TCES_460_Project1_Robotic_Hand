@@ -212,11 +212,11 @@ int main(void){
    	}
 	
 	for (int i=0; i<100; i++) {
+		receive();
 		pressure_read(BASE);
 		calc_all(5);
 		send_data();
 		print_in();
-		receive();
 		delay(1000);
 	}
     	close(sock);
