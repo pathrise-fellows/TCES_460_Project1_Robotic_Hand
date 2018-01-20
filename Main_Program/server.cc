@@ -211,10 +211,14 @@ int main(void){
 		exit(EXIT_FAILURE);
    	}
 	
-	for (int i=0; i<100; i++) {
+	for (int i=0; i<10; i++) {
 		receive();
 		pressure_read(BASE);
+		
 		calc_all(5);
+		for (int i=0; i<5; i++) {
+			cout << press_array[i];	
+		}
 		send_data();
 		print_in();
 		delay(1000);
