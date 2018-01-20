@@ -108,7 +108,13 @@ void imu_read() {
 
 int main() {
 	wiringPiSetup();
-	
+	int check;
+	check = mcp3004Setup(BASE,SPI_CHAN);
+	if (check == -1) {
+		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
+        	exit(EXIT_FAILURE);
+	}
+	/*
    	imu.begin();
 	
    	if (!imu.begin()) {
@@ -116,9 +122,14 @@ int main() {
         	exit(EXIT_FAILURE);
    	}
     imu.calibrate();
-	
+	*/
 	while (1){
-		
+		flex_read(BASE);
+		calc_all(5);
+		for (int i =0; i<5; i++) {
+			cout << "Resistance: " << resistance[i] <<" Angle : "<< angle[i] << "i: " << i << "\n";
+		}
+		delay(1000);
 	}
 	/*
 	Order:
