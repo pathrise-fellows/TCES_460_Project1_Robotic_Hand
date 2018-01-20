@@ -216,6 +216,7 @@ int main(void){
 		pressure_read(BASE);
 		
 		calc_all(5);
+		glove_set();
 		for (int i=0; i<5; i++) {
 			cout << press_array[i];	
 		}
