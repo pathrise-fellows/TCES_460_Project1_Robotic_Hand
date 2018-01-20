@@ -231,6 +231,12 @@ int main(void){
 	hand_setup();
 	fResistor_set();
 	wiringPiSetup();
+	int check;
+	check = mcp3004Setup(BASE,SPI_CHAN);
+	if (check == -1) {
+		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
+        	exit(EXIT_FAILURE);
+	}
 	/*
 	imu.begin();
 	if (!imu.begin()) {
@@ -241,6 +247,8 @@ int main(void){
 	*/
 	for (int i=0; i<100; i++) {
 		//imu_read();
+		flex_read(BASE);
+		calc_all(5);
 		send_data();
 		receive();
 		pressure_sensor_print();
