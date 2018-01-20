@@ -41,9 +41,10 @@ float press_array [5];
 LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
 int R_DIV = 47000;
+const float STR_R[5]= {8500,8500,12000,8000,8000};
+//			 pinky ring middle  index  thumb
+const float BEND_R[5] = {18000,21000,40000,21000,16000};
 
-const float STR_R[5]= {14038,8000,8000,8000,8000};
-const float BEND_R[5] = {68000,40000,40000,40000,40000};
 const int PWM[5] = {25,24,23,22,21};
 float flex_data[5];
 float flex_voltage[5];
