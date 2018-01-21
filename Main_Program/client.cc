@@ -30,8 +30,7 @@ using std::cerr;
 int sock , n;
 struct sockaddr_in server, from;
 demo::Hand hand_data;
-std::string data;
-char buffer[max_data_size];
+//char buffer[max_data_size] = {0};
 unsigned int length;
 float fArray [5]= {1.23f,2.23f,3.23f,4.23f,5.23f};
 float aArray [3]= {1.23f,2.23f,3.23f};
@@ -41,10 +40,10 @@ float press_array [5];
 
 //LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
-int R_DIV = 47000;
-const float STR_R[5]= {8500,8500,12000,8000,8000};
+float R_DIV = 47000.000f;
+const float STR_R[5]= {8500.00f,8500.00f,12000.00f,8000.00f,8000.00f};
 //			 pinky ring middle  index  thumb
-const float BEND_R[5] = {18000,21000,40000,21000,16000};
+const float BEND_R[5] = {18000.00f,21000.00f,40000.00f,21000.00f,16000.00f};
 
 const int PWM[5] = {25,24,23,22,21};
 float flex_data[5];
@@ -90,22 +89,7 @@ void hand_setup(void){
     }
 }
 
-void fResistor_set(){
-    for(int i =0; i < 5; i++){
-        hand_data.set_flex_resistor(i,fArray[i]);
-    }
-    for(int i=0;i<3;i++){
-        hand_data.set_imu_accel(i,aArray[i]);
-    }
-    for(int i=0;i<3;i++){
-        hand_data.set_imu_gyro(i,gArray[i]);
-    }
-    for(int i=0;i<3;i++){
-        hand_data.set_imu_mag(i,mArray[i]);
-    }
-}
-
-void fResistor_print(void){
+void all_print(void){
     printf("Flex resistor\n");
     for(int i =0; i <5; i++){
         printf("%f\n", hand_data.flex_resistor(i));
@@ -124,12 +108,22 @@ void fResistor_print(void){
     }
 }
 
-void send_data_test(void){
-    n=sendto(sock,"hello\n",
-        6,0,(const struct sockaddr *)&server,length);
-}
-
 void send_data(void){
+    char buffer[max_data_size] = {0};
+    for(int i =0; i < 5; i++){
+        hand_data.set_flex_resistor(i,fArray[i]+0.01f);
+    }
+    for(int i=0;i<3;i++){
+        hand_data.set_imu_accel(i,aArray[i]+0.01f);
+    }
+    for(int i=0;i<3;i++){
+        hand_data.set_imu_gyro(i,gArray[i]+0.01f);
+    }
+    for(int i=0;i<3;i++){
+        hand_data.set_imu_mag(i,mArray[i]+0.01f);
+    }
+    all_print();
+    std::string data;
     hand_data.SerializeToString(&data);
     sprintf(buffer, "%s", data.c_str());
     n=sendto(sock,buffer,
@@ -137,7 +131,8 @@ void send_data(void){
     if (n < 0) error("Sendto");
 }
 void receive(){
-    n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&from,&length);
+    char buffer[max_data_size] = {0};
+    n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&server,&length);
     if (n < 0) error("recvfrom");
     printf("receive glove_data  \n");
     std::string a = buffer;
@@ -145,7 +140,9 @@ void receive(){
     glove_data.ParseFromString(a);
     printf("before for loop\n");
     for(int i =0; i < 5; i++){
+        printf("%d = %f\n",i, press_array[i]);
         press_array[i] = glove_data.pressure_sensor(i);
+        printf("%d = %f\n",i, press_array[i]);
     }
     printf("after for loop\n");
 }
@@ -155,8 +152,6 @@ void pressure_sensor_print(void){
         printf("%f\n", press_array[i]);
     }
 }
-
-
 
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -177,33 +172,33 @@ void servo_write(int size) {
 
 void flex_read(int base) {
 	for (int i=0; i<5; i++) {
-		flex_data[i] = analogRead(base+i);
+		flex_data[i] = (float)analogRead(base+i);
 	}
 }
 
 void calc_voltage(int size) {
 	for (int i=0; i<size; i++) {
-		flex_voltage[i] = flex_data[i]*(5.0)/1023.0;
+		flex_voltage[i] = (float)((flex_data[i]*(5.0f)/1023.0f));
 	}
 }
 
 void calc_resistance(int size) {
 	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0/flex_voltage[i] - 1.0);
+		resistance[i] = R_DIV*(5.0f/flex_voltage[i] - 1.0f);
 	}
 }
 
 void calc_angle(int size) {
 	for (int i=0; i<size; i++) {
-		fArray[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
+		fArray[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0f);	
 	}
 }
 
 void calc_all(int size) {
 	for (int i=0; i<size; i++) {
-		flex_voltage[i] = flex_data[i]*(5.0)/1023.0;
-		resistance[i] = R_DIV*(5.0/flex_voltage[i] - 1.0);
-		fArray[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0);	
+		flex_voltage[i] = (float)(flex_data[i]*(5.0f)/1023.0f)+ 0.01f;
+		resistance[i] = (float)(R_DIV*(5.0f/flex_voltage[i] - 1.0f))+ 0.01f;
+		fArray[i] = (float)(map(resistance[i],STR_R[i],BEND_R[i],0,90.0f)+ 0.01f);	
 	}
 }
 /*
@@ -230,7 +225,6 @@ int main(void){
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	sever_setup();
 	hand_setup();
-	fResistor_set();
 	wiringPiSetup();
 	int check;
 	check = mcp3004Setup(BASE,SPI_CHAN);
@@ -241,7 +235,7 @@ int main(void){
 	for (int i=0; i<10; i++) {
 		flex_read(BASE);
 		calc_all(5);
-		fResistor_set();
+        //all_print();
 		send_data();
 		
 		receive();
@@ -252,6 +246,16 @@ int main(void){
 	}
 	close(sock);
 	printf("client finish\n");
+    /*
+    sever_setup();
+    hand_setup();
+    fResistor_set();
+    send_data();
+    receive();
+    pressure_sensor_print();
+    close(sock);*/
+    printf("client finish\n");
+    
    	return 0;   
 }
 
