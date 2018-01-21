@@ -212,6 +212,9 @@ int main(void){
    	}
 	
 	for (int i=0; i<10; i++) {
+		receive();
+		print_in();
+		
 		pressure_read(BASE);
 		calc_all(5);
 		glove_set();
@@ -219,8 +222,7 @@ int main(void){
 			cout << press_array[i];	
 		}
 		send_data();
-		receive();
-		print_in();
+		
 		delay(1000);
 	}
     	close(sock);
