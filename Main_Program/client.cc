@@ -239,12 +239,15 @@ int main(void){
         	exit(EXIT_FAILURE);
 	}
 	for (int i=0; i<10; i++) {
-		receive();
-		pressure_sensor_print();
 		flex_read(BASE);
 		calc_all(5);
 		fResistor_set();
 		send_data();
+		
+		receive();
+		pressure_sensor_print();
+		
+		
 		delay(1000);
 	}
 	close(sock);
