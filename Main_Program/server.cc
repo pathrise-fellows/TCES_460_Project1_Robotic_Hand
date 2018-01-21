@@ -26,15 +26,13 @@ using std::endl;
 using std::cerr;
 
 demo::Glove glove_data;
-std::string data;
 
 
 struct sockaddr_in server;
 struct sockaddr_in client;
-int sock,n;
-unsigned int length;
+int sock,n, length;
 socklen_t fromlen;
-char buf[max_data_size];
+//char buf[max_data_size];
 float flex_array[5];
 float accel_array [3];
 float gyro_array [3];
@@ -62,6 +60,7 @@ void error(const char *msg){
     perror(msg);
     exit(0);
 }
+
 void server_setup(){
     int port = 1024;
     sock=socket(AF_INET, SOCK_DGRAM, 0);
@@ -81,22 +80,12 @@ void glove_setup(){
     }
 }
 
-void glove_set(){
-    for(int i =0; i <5; i++ ){
-        glove_data.set_pressure_sensor(i, press_array[i]);
-    }
-}
-
-void recive_data_test(){
-    n = recvfrom(sock,buf,max_data_size,0,(struct sockaddr *)&client,&fromlen);
-    if (n < 0) error("recvfrom");
-    write(1,buf,n);
-}
 void receive(){
-    n = recvfrom(sock,buf,max_data_size,0,(struct sockaddr *)&client,&fromlen);
+    char buffer[max_data_size] = {0};
+    n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&client,&fromlen);
     if (n < 0) error("recvfrom");
     printf("receive hand_data  \n");
-    std::string a = buf;
+    std::string a = buffer;
     demo::Hand hand_data;
     hand_data.ParseFromString(a);
     for(int i =0; i < 5; i++){
@@ -113,10 +102,16 @@ void receive(){
     }
 }
 void send_data(){
+    char buffer[max_data_size] = {0};
+    for(int i =0; i <5; i++ ){
+        glove_data.set_pressure_sensor(i, press_array[i]+0.01f);
+        printf("%d = %f\n",i, glove_data.pressure_sensor(i));
+    }
+    std::string data;
     glove_data.SerializeToString(&data);
-    sprintf(buf, "%s", data.c_str());
-    n=sendto(sock,buf,
-            strlen(buf),0,(const struct sockaddr *)&client,fromlen);
+    sprintf(buffer, "%s", data.c_str());
+    n=sendto(sock,buffer,
+            max_data_size,0,(const struct sockaddr *)&client,fromlen);
     if (n < 0) error("Sendto");
 }
 
@@ -201,8 +196,7 @@ void calc_all(int size) {
 int main(void){
    	GOOGLE_PROTOBUF_VERIFY_VERSION;
    	server_setup();
-    	glove_setup();
-    	glove_set();
+    glove_setup();
 	wiringPiSetup();
    	int check;
     	check = mcp3004Setup(BASE,SPI_CHAN);
@@ -211,21 +205,26 @@ int main(void){
 		exit(EXIT_FAILURE);
    	}
 	
-	for (int i=0; i<10; i++) {
+	for(int i =0; i <10; i++){
 		receive();
-		print_in();
-		
+		//print_in();
 		pressure_read(BASE);
 		calc_all(5);
-		glove_set();
 		for (int i=0; i<5; i++) {
-			cout << press_array[i];	
+            printf("%d = %f\n",i, press_array[i]);
 		}
 		send_data();
 		
 		delay(1000);
 	}
-    	close(sock);
-    	printf("done with server\n");
+    close(sock);
+    /*server_setup();
+    glove_setup();
+    receive();
+    glove_set();
+    print_in();
+    send_data();
+    close(sock);*/
+    printf("done with server\n");
 	return 0;
 }
