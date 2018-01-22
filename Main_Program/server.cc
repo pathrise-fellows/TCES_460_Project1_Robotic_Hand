@@ -38,7 +38,7 @@ float accel_array [3];
 float gyro_array [3];
 float mag_array [3];
 
-float press_array [5] = {0.14,1.14,2.14,3.14,5555.14};
+float press_array [5] = {0.14f,1.14f,2.14f,3.14f,5555.14f};
 
 const int BASE = 100;
 const int SPI_CHAN = 0;
@@ -52,8 +52,8 @@ float resistance[5];
 float voltage[5];
 //                                                   
 //                              pinky ring middle  index  thumb
-const float max_pressure[5] = {8000,8000,10000,8000,11000};
-const float min_pressure[5] = {0,0,0,0,0};
+const float max_pressure[5] = {80000.0f,8000.0f,10000.0f,8000.0f,11000.0f};
+const float min_pressure[5] = {0.0f,0.0f,0.0f,0.0f,0.0f};
 
 
 void error(const char *msg){
@@ -136,7 +136,14 @@ void print_in(){
 }
 
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	long ret =  (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	if (ret > out_max) {
+		ret = out_max-1;
+	}
+	if (ret < out_min) {
+		ret = out_min+1;
+	}
+	return ret;
 }
 
 void servo_setup(int size,int range) {
@@ -185,12 +192,12 @@ void calc_all(int size) {
 	for (int i =0; i<size; i++) {
 		voltage[i] = pressure_data[i]*(5.0)/1023.0;
 		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
-		float fsrG = 1.0/resistance[i];
+		float fsrG = 1.0f/resistance[i];
 		if (resistance[i] <=600) {
-			press_array[i] = (fsrG - 0.00075)/ 0.00000032639;
+			press_array[i] = (fsrG - 0.00075f)/ 0.00000032639f;
 		}
 		else {
-			press_array[i] = fsrG / 0.000000642857;
+			press_array[i] = fsrG / 0.000000642857f;
 		}
 	}
 }
