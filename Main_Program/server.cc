@@ -45,8 +45,8 @@ const int SPI_CHAN = 0;
 
 
 float pressure_data[5];
-int servo_val[6];
-int PWM[5] = {25,24,23,22,21};
+int servo_val[7] ={0,0,0,0,0,0,0};
+int PWM[7] = {25,24,23,22,21,28,29};
 int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
@@ -138,10 +138,10 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-void servo_setup(int size) {
+void servo_setup(int size,int range) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmCreate(PWM[i],0,50);
+		softPwmCreate(PWM[i],0,range);
 	}
 }
 
