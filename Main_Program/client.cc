@@ -232,6 +232,7 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
         	exit(EXIT_FAILURE);
 	}
+    printf("forloop\n");
 	for (int i=0; i<10; i++) {
 		flex_read(BASE);
 		calc_all(5);
@@ -258,7 +259,6 @@ int main(void){
     
    	return 0;   
 }
-
 
 
 

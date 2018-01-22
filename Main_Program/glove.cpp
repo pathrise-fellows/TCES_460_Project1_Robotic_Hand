@@ -13,6 +13,8 @@
 #include <LSM9DS1.h>
 #include <LSM9DS1_Types.h>
 #include <softPwm.h>
+#include <cstdlib>
+
 //#include <mcp3008.h>
 
 //LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
@@ -40,13 +42,20 @@ float imu_mag[3];
 #define BASE 100
 #define SPI_CHAN 0
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	int ret =  (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	if (ret > out_max) {
+		ret = out_max-1;
+	}
+	if (ret < out_min) {
+		ret = out_min+1;
+	}
+	return ret;
 }
 
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmCreate(PWM[i],0,50);
+		softPwmCreate(PWM[i],0,360);
 	}
 }
 
@@ -125,8 +134,9 @@ int main() {
    	}
     imu.calibrate();
 	*/
+	int MAX = 25;
 	pinMode(PWM[0],OUTPUT);
-	softPwmCreate(PWM[0],0,50);
+	softPwmCreate(PWM[0],0,MAX);
 	while (1){
 		flex_read(BASE);
 		calc_all(5);
@@ -137,10 +147,18 @@ int main() {
 
 		}
 		*/
-		cout << "Angle: " << angle[3] << "\n";
+		
+		int p = map(resistance[3],STR_R[3],BEND_R[3],0,MAX);
+		cout << "Res: " << resistance[3] <<", p: " << p << "\n"; 
 		//softPwmWrite(PWM[0],(int)angle[3]);
-		softPwmWrite(PWM[0],50);
-		delay(1000);
+	//	for (int i = 0; i<=MAX; i++){
+	//	int x =
+	//	cout <<"x: " << x << ", ";
+	//	cout<< i << "\n";
+		softPwmWrite(PWM[0],p);
+		//cout << i<<"\n"; 
+		delay(10);
+	//}
 	}
 	/*
 	Order:
