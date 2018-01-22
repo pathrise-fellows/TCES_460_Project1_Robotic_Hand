@@ -23,9 +23,9 @@ int R_DIV = 47000;
 
 using std::cout;
 
-const float STR_R[5]= {8500,8500,12000,8000,8000};
+const float STR_R[5]= {8500.0f,8500.0f,12000.0f,8000.0f,8000.0f};
 //			 pinky ring middle  index  thumb
-const float BEND_R[5] = {18000,21000,40000,21000,16000};
+const float BEND_R[5] = {18000.0f,21000.0f,40000.0f,21000.0f,16000.0f};
 const int PWM[5] = {25,24,23,22,21};
 int servo_val[5];
 float resistance[5];
