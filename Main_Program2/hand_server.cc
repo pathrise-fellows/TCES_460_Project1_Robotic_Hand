@@ -120,8 +120,15 @@ void print_in(){
     }
 }
 
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+int map(int x, int in_min, int in_max, int out_min, int out_max) {
+	int ret =  (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	if (ret > out_max) {
+		ret = out_max-1;
+	}
+	if (ret < out_min) {
+		ret = out_min+1;
+	}
+	return ret;
 }
 
 void servo_setup(int size) {
@@ -178,14 +185,17 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
 		exit(EXIT_FAILURE);
    	}
-	
+	// servo_setup(8);
 	for(int i =0; i <10; i++){
 		receive();
 		//print_in();
+		// servo_set_val();
+		// servo_write(8);
 		pressure_read(BASE);
 		calc_all(5);
+		
 		for (int i=0; i<5; i++) {
-            printf("%d = %f\n",i, pressure[i]);
+            		printf("%d = %f\n",i, pressure[i]);
 		}
 		send_data();
 		
