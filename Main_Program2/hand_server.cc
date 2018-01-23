@@ -43,7 +43,7 @@ const int SPI_CHAN = 0;
 
 float pressure_data[5];
 int servo_val[8];
-int PWM[5] = {25,24,23,22,21,28,29,26};
+int PWM[8] = {25,24,23,22,21,28,29,26};
 int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
