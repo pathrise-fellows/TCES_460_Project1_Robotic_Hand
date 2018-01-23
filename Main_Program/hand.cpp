@@ -13,8 +13,8 @@
 using std::cout;
 
 float pressure_data[5];
-int servo_val[6] = {25,25,25,25,25};
-int PWM[5] = {25,24,23,22,21};
+int servo_val[8] = {0,0,0,0,0,0,0,0};
+int PWM[5] = {25,24,23,22,21,27,28,29};
 int R_DIV = 3220;
 float resistance[5];
 float pressure [5];
@@ -92,20 +92,18 @@ int main() {
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
         	exit(EXIT_FAILURE);
 	}
-	int MAX = 20;
-	pinMode(PWM[0],OUTPUT);
-	softPwmCreate(PWM[0],0,MAX);
-	while (1) {	
-	for (int i =0; i<=MAX; i++) {
-		softPwmWrite(PWM[0],i);
-		cout << i << "\n";
-		delay(2000);
-	}
-	for (int i = MAX; i>=1; i--) {
-		softPwmWrite(PWM[0],i);
-		cout << i << "\n";
-		delay(2000);
-	}
+	int MAX = 25;
+	int servo_amt = 5;
+	//pinMode(PWM[0],OUTPUT);
+	//softPwmCreate(PWM[0],0,MAX);
+	servo_setup(servo_amt);
+	while (1) {
+		for (int i =1; i<MAX; i=i+2) {
+			for (int j =0; j<5; j++) {
+				servo_val[j] = i;
+			}
+			servo_write(servo_amt);
+		}
 	}
 	/*
 	Order:
