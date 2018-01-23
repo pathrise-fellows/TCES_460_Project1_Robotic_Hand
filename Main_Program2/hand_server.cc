@@ -32,9 +32,8 @@ struct sockaddr_in server;
 struct sockaddr_in client;
 int sock,n, length;
 socklen_t fromlen;
-//char buf[max_data_size];
 int finger[5];
-int wrist [2];
+int wrist [3];
 int pressure [5] = {3,4,5,6,7};
 
 float pressure_calc[5];
@@ -54,7 +53,6 @@ const float min_pressure[5] = {0,0,0,0,0};
 
 
 void error(const char *msg){
-
     perror(msg);
     exit(0);
 }
@@ -91,7 +89,7 @@ void receive(){
     for(int i =0; i < 5; i++){
         finger[i] = glove_data.finger(i)-1;
     }
-    for(int i =0; i < 2; i++){
+    for(int i =0; i < 3; i++){
         wrist[i] = glove_data.wrist(i)-1;
     }
 }
@@ -115,7 +113,7 @@ void print_in(){
         printf("%d = %f\n",i, finger[i]);
     }
     printf("wrist values\n");
-    for(int i =0; i < 2; i++){
+    for(int i =0; i < 3; i++){
         printf("%d = %f\n",i, wrist[i]);
     }
 }
@@ -149,7 +147,7 @@ void servo_val_set() {
 		servo_val[i] = finger[5];
 	}
 	int c= 6;
-	for (int i =0; i<2; i++){
+	for (int i =0; i<3; i++){
 		servo_val[c] = wrist[i];
 		c++
 	}
