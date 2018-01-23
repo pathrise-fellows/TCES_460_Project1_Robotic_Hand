@@ -37,13 +37,14 @@ int finger[5];
 int wrist [2];
 int pressure [5] = {3,4,5,6,7};
 
+float pressure_calc[5];
 const int BASE = 100;
 const int SPI_CHAN = 0;
 
 
 float pressure_data[5];
-int servo_val[6];
-int PWM[5] = {25,24,23,22,21};
+int servo_val[8];
+int PWM[5] = {25,24,23,22,21,28,29,26};
 int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
@@ -136,32 +137,20 @@ void servo_write(int size) {
 	}
 }
 
+void servo_val_set() {
+	for (int i =0; i<5; i++) {
+		servo_val[i] = finger[5];
+	}
+	int c= 6;
+	for (int i =0; i<2; i++){
+		servo_val[c] = wrist[i];
+		c++
+	}
+}
+
 void pressure_read(int base) {
 	for (int i=0; i<5; i++) {
 		pressure_data[i] = analogRead(base+i);
-	}
-}
-
-void calc_voltage(int size) {
-	for (int i=0; i<size; i++) {
-		voltage[i] = pressure_data[i]*(5.0)/1023.0;
-	}
-}
-
-void calc_resistance(int size) {
-	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
-	}
-}
-void calc_pressure(int size) {
-	for (int i =0; i<size; i++) {
-		float fsrG = 1.0/resistance[i];
-		if (resistance[i] <=600) {
-			pressure[i] = (fsrG - 0.00075)/ 0.00000032639;
-		}
-		else {
-			pressure[i] = fsrG / 0.000000642857;
-		}
 	}
 }
 
@@ -171,11 +160,12 @@ void calc_all(int size) {
 		resistance[i] = R_DIV*(5.0/voltage[i] - 1.0);
 		float fsrG = 1.0/resistance[i];
 		if (resistance[i] <=600) {
-			pressure[i] = (fsrG - 0.00075)/ 0.00000032639;
+			pressure_calc[i] = (fsrG - 0.00075)/ 0.00000032639;
 		}
 		else {
-			pressure[i] = fsrG / 0.000000642857;
+			pressure_calc[i] = fsrG / 0.000000642857;
 		}
+		pressure[i] = pressure_calc;
 	}
 }
 int main(void){
