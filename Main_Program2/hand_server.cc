@@ -40,7 +40,7 @@ float pressure_calc[5];
 const int BASE = 100;
 const int SPI_CHAN = 0;
 
-
+const int range = 25;
 float pressure_data[5];
 int servo_val[8];
 int PWM[8] = {25,24,23,22,21,28,29,26};
@@ -149,7 +149,7 @@ void servo_val_set() {
 	int c= 6;
 	for (int i =0; i<3; i++){
 		servo_val[c] = wrist[i];
-		c++
+		c++;
 	}
 }
 
@@ -170,7 +170,8 @@ void calc_all(int size) {
 		else {
 			pressure_calc[i] = fsrG / 0.000000642857;
 		}
-		pressure[i] = pressure_calc;
+        
+		pressure[i] = map(pressure_calc[i], min_pressure[i], max_pressure[i], 0, range);
 	}
 }
 int main(void){
@@ -193,7 +194,7 @@ int main(void){
 		calc_all(5);
 		
 		for (int i=0; i<5; i++) {
-            		printf("%d = %f\n",i, pressure[i]);
+            		printf("%d = %d\n",i, pressure[i]);
 		}
 		send_data();
 		

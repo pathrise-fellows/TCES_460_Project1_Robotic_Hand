@@ -66,7 +66,7 @@ void hand_setup(void){
     }
 }
 
-void sever_setup(void){
+void server_setup(void){
     int port = 1024;
     struct hostent *hp;
     length=sizeof(struct sockaddr_in);
@@ -128,7 +128,7 @@ void receive(){
 void pressure_sensor_print(void){
     printf("Pressure resistor\n");
     for(int i =0; i <5; i++){
-        printf("%f\n", pressure[i]);
+        printf("%d\n", pressure[i]);
     }
 }
 
@@ -197,7 +197,7 @@ void imu_read() {
 
 int main(void){
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
-	sever_setup();
+	server_setup();
 	wiringPiSetup();
 	int check;
 	check = mcp3004Setup(BASE,SPI_CHAN);
@@ -207,8 +207,8 @@ int main(void){
 	}
 	// servo_setup(5);
 	for (int i=0; i<10; i++) {
-		//flex_read(BASE);
-		//calc_all(5);
+		flex_read(BASE);
+		calc_all(5);
         	//all_print();
 		send_data();
 		receive();
