@@ -200,7 +200,7 @@ void calc_all(int size) {
 	for (int i=0; i<size; i++) {
 		flex_voltage[i] = (float)(flex_data[i]*(5.0f)/1023.0f)+ 0.01f;
 		resistance[i] = (float)(R_DIV*(5.0f/flex_voltage[i] - 1.0f))+ 0.01f;
-		fArray[i] = (float)(map(resistance[i],STR_R[i],BEND_R[i],0,90.0f)+ 0.01f);	
+		fArray[i] = resistance[i];	
 	}
 }
 /*
