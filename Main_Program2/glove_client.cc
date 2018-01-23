@@ -34,7 +34,7 @@ demo::Glove_Client glove_data;
 //char buffer[max_data_size] = {0};
 unsigned int length;
 int finger [5]= {2,3,4,5,6};
-int wrist [2]= {2,3};
+int wrist [3]= {2,3,4};
 int pressure [5]; /// Integer recieved from proto
 
 //LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
@@ -61,7 +61,7 @@ void hand_setup(void){
     for(int i =0; i <5; i++){
         glove_data.add_finger(i);
     }
-    for(int i =0; i <2; i++ ){
+    for(int i =0; i <3; i++ ){
         glove_data.add_wrist(i);
     }
 }
@@ -72,7 +72,6 @@ void sever_setup(void){
     length=sizeof(struct sockaddr_in);
     sock= socket(AF_INET, SOCK_DGRAM, 0);
     if (sock < 0) error("socket");
-
     server.sin_family = AF_INET;
     hp = gethostbyname("10.16.4.131");
     bcopy((char *)hp->h_addr, 
@@ -88,7 +87,7 @@ void all_print(void){
         printf("%d\n", glove_data.finger(i));
     }
     printf("wrist\n");
-    for(int i =0; i<2;i++){
+    for(int i =0; i<3;i++){
         printf("%d\n", glove_data.wrist(i));
     }
 }
@@ -97,10 +96,9 @@ void send_data(void){
     char buffer[max_data_size] = {0};
     all_print();
     for(int i =0; i < 5; i++){
-        printf("%d \n", finger[i]);
         glove_data.set_finger(i,finger[i]+1);
     }
-    for(int i=0;i<2;i++){
+    for(int i=0;i<3;i++){
         glove_data.set_wrist(i,wrist[i]+1);
     }
     all_print();
