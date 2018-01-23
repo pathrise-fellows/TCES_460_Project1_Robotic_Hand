@@ -22,6 +22,7 @@ const int BASE = 100;
 const int SPI_CHAN = 0;
 
 const int max_data_size = 4096;
+const int range = 25;
 
 using std::cout;
 using std::endl;
@@ -34,7 +35,7 @@ demo::Glove_Client glove_data;
 unsigned int length;
 int finger [5]= {2,3,4,5,6};
 int wrist [2]= {2,3};
-int pressure [5];
+int pressure [5]; /// Integer recieved from proto
 
 //LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
@@ -43,12 +44,12 @@ const float STR_R[5]= {8500.00f,8500.00f,12000.00f,8000.00f,8000.00f};
 //			 pinky ring middle  index  thumb
 const float BEND_R[5] = {18000.00f,21000.00f,40000.00f,21000.00f,16000.00f};
 
-const int PWM[5] = {25,24,23,22,21};
+const int PWM[8] = {25,24,23,22,21,28,29,26};
 float flex_data[5];
 float flex_voltage[5];
 float resistance[5];
 float buzzer_val[5];
-int servo_val[5];
+int servo_val[8];
 
 
 void error(const char *msg){
@@ -133,8 +134,15 @@ void pressure_sensor_print(void){
     }
 }
 
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+int map(int x, int in_min, int in_max, int out_min, int out_max) {
+	int ret =  (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	if (ret > out_max) {
+		ret = out_max-1;
+	}
+	if (ret < out_min) {
+		ret = out_min+1;
+	}
+	return ret;
 }
 
 void servo_setup(int size) {
@@ -150,35 +158,23 @@ void servo_write(int size) {
 	}
 }
 
+void servo_val_set() {
+	for (int i=0; i<5; i++) {
+		servo_val[i] = pressure[i];
+	}
+}
+
 void flex_read(int base) {
 	for (int i=0; i<5; i++) {
 		flex_data[i] = (float)analogRead(base+i);
 	}
 }
 
-void calc_voltage(int size) {
-	for (int i=0; i<size; i++) {
-		flex_voltage[i] = (float)((flex_data[i]*(5.0f)/1023.0f));
-	}
-}
-
-void calc_resistance(int size) {
-	for (int i=0; i<size; i++) {
-		resistance[i] = R_DIV*(5.0f/flex_voltage[i] - 1.0f);
-	}
-}
-
-void calc_angle(int size) {
-	for (int i=0; i<size; i++) {
-		finger[i] = map(resistance[i],STR_R[i],BEND_R[i],0,90.0f);	
-	}
-}
-
 void calc_all(int size) {
 	for (int i=0; i<size; i++) {
-		flex_voltage[i] = (float)(flex_data[i]*(5.0f)/1023.0f)+ 0.01f;
-		resistance[i] = (float)(R_DIV*(5.0f/flex_voltage[i] - 1.0f))+ 0.01f;
-		finger[i] = (float)(map(resistance[i],STR_R[i],BEND_R[i],0,90.0f)+ 0.01f);	
+		flex_voltage[i] = (float)(flex_data[i]*(5.0f)/1023.0f);
+		resistance[i] = (float)(R_DIV*(5.0f/flex_voltage[i] - 1.0f));
+		finger[i] = map(resistance[i],STR_R[i],BEND_R[i],0,range);
 	}
 }
 /*
@@ -211,15 +207,16 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
         	exit(EXIT_FAILURE);
 	}
+	// servo_setup(5);
 	for (int i=0; i<10; i++) {
 		//flex_read(BASE);
 		//calc_all(5);
-        //all_print();
+        	//all_print();
 		send_data();
-		
 		receive();
 		pressure_sensor_print();
-		
+		// servo_set_val();
+		// servo_write(5);
 		
 		delay(1000);
 	}
