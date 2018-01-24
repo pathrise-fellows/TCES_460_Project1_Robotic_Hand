@@ -137,11 +137,11 @@ void send_data(){
 void print_recieve(){
 	cout << "Start Recieve Data" << endl;
     for(int i =0; i < 5; i++){
-        printf("%d = %f\n",i, finger[i]);
+        printf("%d = %d\n",i, finger[i]);
     }
     printf("wrist values\n");
     for(int i =0; i < 3; i++){
-        printf("%d = %f\n",i, wrist[i]);
+        printf("%d = %d\n",i, wrist[i]);
     }
 	cout << "End of Recieve Data" << endl;
 }
