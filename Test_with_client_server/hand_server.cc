@@ -97,8 +97,8 @@ int timeout_recvfrom(int timeoutinseconds){
     struct timeval t;
     FD_ZERO(&socks);
     FD_SET(sock, &socks);
-    tv.tv_sec = 0;
-    tv.tv_usec = timeoutinseconds * 1000;
+    t.tv_sec = 0;
+    t.tv_usec = timeoutinseconds * 1000;
     printf("if start\n", n);
     int temp = select(sock + 1, &socks, NULL, NULL, &t);
     printf("%d \n", temp);
