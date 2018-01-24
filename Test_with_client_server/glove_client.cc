@@ -252,8 +252,8 @@ int main(void){
         	exit(EXIT_FAILURE);
    	}
     	imu.calibrate();
-	// servo_setup(5);
-	for (int i=0; i<10; i++) {
+	//servo_setup(5);
+	while(1) {
 		flex_read(BASE);
 		calc_all(5);
 		imu_read_calc();
@@ -262,9 +262,8 @@ int main(void){
 		receive();
 		print_receive();
 		servo_val_set();
-		// servo_write(5);
-		
-		delay(1000);
+		//servo_write(5);
+		delay(100);
 	}
 	close(sock);
 	printf("Client Finish!!!\n");
