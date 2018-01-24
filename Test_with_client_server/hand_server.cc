@@ -99,7 +99,9 @@ int timeout_recvfrom(int timeoutinseconds){
     FD_SET(sock, &socks);
     t.tv_sec = timeoutinseconds;
     printf("if start\n", n);
-    if (select(sock + 1, &socks, NULL, NULL, &t)){
+    int temp = select(sock + 1, &socks, NULL, NULL, &t);
+    printf("%d \n", temp);
+    if (temp >0){
 	printf("listen \n");
         recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&client,&fromlen);
         return TRUE;
