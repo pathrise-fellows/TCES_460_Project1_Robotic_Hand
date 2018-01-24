@@ -189,7 +189,10 @@ int main(void){
 	for(int i =0; i <10; i++){
 		receive();
 		//print_in();
-		// servo_set_val();
+		servo_set_val();
+		for (int i=0; i<8; i++) {
+			cout << servo_val[i] << endl;
+		}
 		// servo_write(8);
 		pressure_read(BASE);
 		calc_all(5);
