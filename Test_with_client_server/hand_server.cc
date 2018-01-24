@@ -191,7 +191,7 @@ void servo_write(int size) {
 
 void servo_val_set() {
 	for (int i =0; i<5; i++) {
-		servo_val[i] = finger[5];
+		servo_val[i] = finger[i];
 	}
 	int c= 6;
 	for (int i =0; i<3; i++){
