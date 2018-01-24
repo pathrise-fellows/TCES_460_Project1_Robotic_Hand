@@ -110,8 +110,9 @@ void receive(){
     memset(buffer, 0, sizeof(buffer));
     n = timeout_recvfrom(5);
     //n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&client,&fromlen);
-    if (n < 0){
+    if (n == FALSE){
         printf("Did not receive");
+	close(sock);
         exit(EXIT_FAILURE);
     }
     printf("receive Glove_Client  \n");
