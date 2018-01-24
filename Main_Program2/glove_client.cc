@@ -17,7 +17,7 @@
 #include <LSM9DS1.h>
 #include <LSM9DS1_Types.h>
 #include <softPwm.h>
-
+#include <math.h>
 const int BASE = 100;
 const int SPI_CHAN = 0;
 
@@ -35,9 +35,10 @@ demo::Glove_Client glove_data;
 unsigned int length;
 int finger [5]= {2,3,4,5,6};
 int wrist [3]= {2,3,4};
+// roll,pitch,yaw
 int pressure [5]; /// Integer recieved from proto
 
-//LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
+LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
 float R_DIV = 47000.000f;
 const float STR_R[5]= {8500.00f,8500.00f,12000.00f,8000.00f,8000.00f};
@@ -51,6 +52,13 @@ float resistance[5];
 float buzzer_val[5];
 int servo_val[8];
 
+const float PI = 3.141592653589793238;
+int ROLLMAX = 3.0*10.0;
+int ROLLMIN = 0;
+int PITCHMAX = 20;
+int PITCHMIN = 0;
+int YAWMIN = 39;//This depends on the orientation of the IMU, needs to be adjusted if we change location/starting orientation
+int YAWMAX = 80;//This also depends on statring orientation, will need to be adjusted
 
 void error(const char *msg){
       perror(msg);
@@ -143,10 +151,10 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
 	return ret;
 }
 
-void servo_setup(int size) {
+void servo_setup(int size,int range) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmCreate(PWM[i],0,50);
+		softPwmCreate(PWM[i],0,range);
 	}
 }
 
@@ -175,25 +183,39 @@ void calc_all(int size) {
 		finger[i] = map(resistance[i],STR_R[i],BEND_R[i],0,range);
 	}
 }
-/*
-void imu_read() {
-		while (!imu.gyroAvailable()) ;
-        imu.readGyro();
-		gArray[0] = imu.calcGyro(imu.gx);
-		gArray[1] = imu.calcGyro(imu.gy);
-		gArray[2] = imu.calcGyro(imu.gz);
-        while(!imu.accelAvailable()) ;
-        imu.readAccel();
-		wrist[0] = imu.calcAccel(imu.ax);
-		wrist[1] = imu.calcAccel(imu.ay);
-		wrist[2] = imu.calcAccel(imu.az);
-        while(!imu.magAvailable()) ;
-        imu.readMag();
-		mArray[0] = imu.calcMag(imu.mx);
-		mArray[1] = imu.calcMag(imu.my);
-		mArray[2] = imu.calcMag(imu.mz);
+
+float gyro[3];
+float accel[3];
+float mag[3];
+
+imu_read_calc() {
+		while(!imu.gyroAvailable());
+		imu.readGyro();
+		while(!imu.accelAvailable());
+		imu.readAccel();
+		while(!imu.magAvailable());
+		imu.readMag();
+		printf("gyro: %f, %f, %f [deg/s]\n", imu.calcGyro(imu.gx), imu.calcGyro(imu.gy), imu.calcGyro(imu.gz));
+		printf("Accel: %f, %f, %f [Gs]\n", imu.calcAccel(imu.ax), imu.calcAccel(imu.ay), imu.calcAccel(imu.az));
+		printf("Mag: %f, %f, %f [gauss]\n", imu.calcMag(imu.mx), imu.calcMag(imu.my), imu.calcMag(imu.mz));
+		float accXnorm = imu.ax/sqrt(pow(imu.ax,2)+pow(imu.ay,2)+pow(imu.az,2));
+		float accYnorm = imu.ay/sqrt(pow(imu.ax,2)+pow(imu.ay,2)+pow(imu.az,2));
+		float accZnorm = imu.az/sqrt(pow(imu.ax,2)+pow(imu.ay,2)+pow(imu.ax,2));
+		float pitch = asin(accXnorm);
+		float outputPitch = (pitch +1.0)*10.0;
+		float roll = -asin(accYnorm/cos(pitch));
+		float outputRoll = (roll +1.0)*10.0;
+		float magXcomp = imu.mx*cos(pitch)+imu.mz*sin(pitch);
+		float magYcomp = imu.mx*sin(roll)*sin(pitch)+imu.my*cos(roll)-imu.mz*sin(roll)*cos(pitch);
+		printf("pitch: %f \n", outputPitch);
+		printf("roll: %f \n", roll);
+		float heading = 180*atan2(magYcomp,magXcomp)/PI;
+		printf("heading: %f\n", heading);
+		wrist[0] = map((long)outputRoll,ROLLMIN,ROLLMAX,0,25);
+		wrist[1] = map((long)outputPitch,PITCHMIN,PITCHMAX,0,25);
+		wrist[2] = map(heading,YAWMIN,YAWMAX,0,20);
 }
-*/
+
 
 int main(void){
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -205,10 +227,18 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
         	exit(EXIT_FAILURE);
 	}
-	// servo_setup(5);
+	imu.begin();
+   	if (!imu.begin()) {
+        	fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
+        	exit(EXIT_FAILURE);
+   	}
+    	imu.calibrate();
+	
+	// servo_setup(5,25);
 	for (int i=0; i<10; i++) {
 		flex_read(BASE);
 		calc_all(5);
+		imu_read_calc();
         	//all_print();
 		send_data();
 		receive();
