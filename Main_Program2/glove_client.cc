@@ -239,10 +239,17 @@ int main(void){
 		flex_read(BASE);
 		calc_all(5);
 		imu_read_calc();
+		for (int i=0; i<5; i++) {
+			fingers[i];
+		}
+		for (int i =0; i<3; i++) {
+			wrist[i];
+		}
         	//all_print();
 		send_data();
 		receive();
 		pressure_sensor_print();
+		
 		// servo_set_val();
 		// servo_write(5);
 		
