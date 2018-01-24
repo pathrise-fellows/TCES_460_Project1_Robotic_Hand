@@ -127,6 +127,7 @@ void receive(){
     }
 }
 void send_data(){
+    printf("send data start\n");
     memset(buffer, 0, sizeof(buffer));
     for(int i =0; i <5; i++ ){
         hand_data.set_pressure(i, pressure[i]+1);
@@ -134,9 +135,11 @@ void send_data(){
     std::string data;
     hand_data.SerializeToString(&data);
     sprintf(buffer, "%s", data.c_str());
+    printf("send data middle\n");
     n=sendto(sock,buffer,
             max_data_size,0,(const struct sockaddr *)&client,fromlen);
     if (n < 0) error("Sendto");
+    printf("send data finish\n");
 }
 
 void print_recieve(){
