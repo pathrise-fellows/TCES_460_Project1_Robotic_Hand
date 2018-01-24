@@ -251,7 +251,7 @@ int main(void){
 		calc_all(5);
 		print_send();
 		send_data();
-		delay(100);
+		//delay(100);
 	}
     close(sock);
     /*server_setup();
