@@ -52,7 +52,12 @@ const int SPI_CHAN = 0;
 const int range = 25;
 float pressure_data[5];
 int servo_val[8];
-int PWM[8] = {25,24,23,22,21,28,29,26};
+
+// 29 is yaw
+// 28 is roll
+// 27 is pitch
+
+int PWM[8] = {25,24,23,22,21,29,28,27};
 int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
@@ -174,7 +179,7 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmCreate(PWM[i],0,50);
+		softPwmCreate(PWM[i],0,imu_read_calc);
 	}
 }
 
