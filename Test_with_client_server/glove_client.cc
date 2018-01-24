@@ -256,6 +256,7 @@ int main(void){
 	for (int i=0; i<10; i++) {
 		flex_read(BASE);
 		calc_all(5);
+		imu_read_calc();
         	print_send();
 		send_data();
 		receive();
