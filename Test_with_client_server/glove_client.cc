@@ -89,8 +89,8 @@ void server_setup(void){
     hand_setup();
 }
 
-void all_print(void){
-    printf("Flex resistor\n");
+void print_send(void){
+    cout << "Start of Glove data" << endl;
     for(int i =0; i <5; i++){
         printf("%d\n", glove_data.finger(i));
     }
@@ -98,6 +98,15 @@ void all_print(void){
     for(int i =0; i<3;i++){
         printf("%d\n", glove_data.wrist(i));
     }
+	cout << "End of Glove data" << endl;
+}
+
+void print_receive() {
+	cout << "Servo Values" << endl;
+	for (int i=0; i<5; i++) {
+		cout << servo_val[i] << endl;
+	}
+	cout << "End of Servo values" << endl;
 }
 
 void send_data(void){
@@ -133,12 +142,7 @@ void receive(){
     }
     printf("after for loop\n");
 }
-void pressure_sensor_print(void){
-    printf("Pressure resistor\n");
-    for(int i =0; i <5; i++){
-        printf("%d\n", pressure[i]);
-    }
-}
+
 
 int map(int x, int in_min, int in_max, int out_min, int out_max) {
 	int ret =  (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -216,6 +220,8 @@ void imu_read_calc() {
 		wrist[2] = map((int)heading,YAWMIN,YAWMAX,0,range);
 }
 
+
+
 int main(void){
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	server_setup();
@@ -236,17 +242,17 @@ int main(void){
 	for (int i=0; i<10; i++) {
 		flex_read(BASE);
 		calc_all(5);
-        	//all_print();
+        	print_send();
 		send_data();
 		receive();
-		pressure_sensor_print();
-		// servo_set_val();
+		print_recieve();
+		servo_set_val();
 		// servo_write(5);
 		
 		delay(1000);
 	}
 	close(sock);
-    printf("client finish\n");
+	printf("Client Finish!!!\n");
     
    	return 0;   
 }
