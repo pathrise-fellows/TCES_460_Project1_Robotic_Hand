@@ -134,14 +134,14 @@ void send_data(){
 }
 
 void print_recieve(){
-	cout << "Start of Finger and Wrist Data" << endl;
+	cout << "Start of Finger and Wrist Data Receive" << endl;
     for(int i =0; i < 5; i++){
         printf("%d = %d\n",i, finger[i]);
     }
     for(int i =0; i < 3; i++){
         printf("%d = %d\n",i, wrist[i]);
     }
-	cout << "End of Finger and Wrist Data" << endl;
+	cout << "End of Finger and Wrist Data Receive" << endl;
 }
 
 void print_servo() {
