@@ -17,6 +17,7 @@
 #include <LSM9DS1.h>
 #include <LSM9DS1_Types.h>
 #include <softPwm.h>
+#include <math.h>
 
 const int BASE = 100;
 const int SPI_CHAN = 0;
@@ -153,7 +154,7 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmCreate(PWM[i],0,50);
+		softPwmCreate(PWM[i],0,range);
 	}
 }
 
@@ -210,9 +211,9 @@ imu_read_calc() {
 		printf("roll: %f \n", roll);
 		float heading = 180*atan2(magYcomp,magXcomp)/PI;
 		printf("heading: %f\n", heading);
-		wrist[0] = map((long)outputRoll,ROLLMIN,ROLLMAX,0,25);
-		wrist[1] = map((long)outputPitch,PITCHMIN,PITCHMAX,0,25);
-		wrist[2] = map(heading,YAWMIN,YAWMAX,0,20);
+		wrist[0] = map((int)outputRoll,ROLLMIN,ROLLMAX,0,range);
+		wrist[1] = map((int)outputPitch,PITCHMIN,PITCHMAX,0,range);
+		wrist[2] = map((int)heading,YAWMIN,YAWMAX,0,range);
 }
 
 int main(void){
