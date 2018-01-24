@@ -123,7 +123,7 @@ void receive(){
 void send_data(){
     memset(buffer, 0, sizeof(buffer));
     for(int i =0; i <5; i++ ){
-        hand_data.set_pressure(i, pressure[i]);
+        hand_data.set_pressure(i, pressure[i]+1);
     }
     std::string data;
     hand_data.SerializeToString(&data);
@@ -134,15 +134,14 @@ void send_data(){
 }
 
 void print_recieve(){
-	cout << "Start Recieve Data" << endl;
+	cout << "Start of Finger and Wrist Data" << endl;
     for(int i =0; i < 5; i++){
         printf("%d = %d\n",i, finger[i]);
     }
-    printf("wrist values\n");
     for(int i =0; i < 3; i++){
         printf("%d = %d\n",i, wrist[i]);
     }
-	cout << "End of Recieve Data" << endl;
+	cout << "End of Finger and Wrist Data" << endl;
 }
 
 void print_servo() {
@@ -154,11 +153,11 @@ void print_servo() {
 }
 
 void print_send() {
-	cout << "Start of Send values" << endl;
+	cout << "Start of Send Pressure values" << endl;
 	for (int i =0; i<5; i++) {
 		cout << pressure[i] << endl;
 	}
-	cout << "End of Send values" << endl;
+	cout << "End of Send Pressure values" << endl;
 }
 
 int map(int x, int in_min, int in_max, int out_min, int out_max) {
