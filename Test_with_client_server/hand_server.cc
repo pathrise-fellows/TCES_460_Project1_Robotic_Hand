@@ -232,7 +232,7 @@ int main(void){
 	for(int i =0; i <10; i++){
 		receive();
 		print_recieve();
-		servo_set_val();
+		servo_val_set();
 		print_servo();
 		// servo_write(8);
 		pressure_read(BASE);
