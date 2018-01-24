@@ -98,16 +98,19 @@ int timeout_recvfrom(int timeoutinseconds){
     FD_ZERO(&socks);
     FD_SET(sock, &socks);
     t.tv_sec = timeoutinseconds;
+    printf("if start\n", n);
     if (select(sock + 1, &socks, NULL, NULL, &t)){
 	printf("listen \n");
         recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&client,&fromlen);
         return TRUE;
     }
     else
+	printf("fail\n", n);
         return FALSE;
 }
 
 void receive(){
+    printf("receive start\n", n);
     memset(buffer, 0, sizeof(buffer));
     n = timeout_recvfrom(5);
     //n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&client,&fromlen);
