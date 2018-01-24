@@ -116,7 +116,7 @@ void receive(){
     n = timeout_recvfrom(5);
     //n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&client,&fromlen);
     if (n == FALSE){
-        printf("Did not receive");
+        printf("Did not receive\n");
 	close(sock);
         exit(EXIT_FAILURE);
     }
