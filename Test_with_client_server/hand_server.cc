@@ -226,18 +226,18 @@ int main(void){
 		fprintf(stderr, "Failed to communicate with ADC_Chip.\n");
 		exit(EXIT_FAILURE);
    	}
-	// servo_setup(8);
-	for(int i =0; i <10; i++){
+	servo_setup(8);
+	while(1) {
 		receive();
 		print_recieve();
 		servo_val_set();
 		print_servo();
-		// servo_write(8);
+		servo_write(8);
 		pressure_read(BASE);
 		calc_all(5);
 		print_send();
 		send_data();
-		delay(1000);
+		delay(100);
 	}
     close(sock);
     /*server_setup();
