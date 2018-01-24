@@ -123,8 +123,7 @@ void receive(){
 void send_data(){
     memset(buffer, 0, sizeof(buffer));
     for(int i =0; i <5; i++ ){
-        hand_data.set_pressure(i, pressure[i]+1);
-        printf("%d = %f\n",i, hand_data.pressure(i));
+        hand_data.set_pressure(i, pressure[i]);
     }
     std::string data;
     hand_data.SerializeToString(&data);
