@@ -119,15 +119,14 @@ void print_servo() {
 
 void send_data(void){
     char buffer[max_data_size] = {0};
-    all_print();
     for(int i =0; i < 5; i++){
         glove_data.set_finger(i,finger[i]+1);
     }
     for(int i=0;i<3;i++){
         glove_data.set_wrist(i,wrist[i]+1);
     }
-    all_print();
     std::string data;
+	cout << "Sent glove data" << endl;
     glove_data.SerializeToString(&data);
     sprintf(buffer, "%s", data.c_str());
     n=sendto(sock,buffer,
@@ -142,13 +141,9 @@ void receive(){
     std::string a = buffer;
     demo::Hand_Server hand_data;
     hand_data.ParseFromString(a);
-    printf("before for loop\n");
     for(int i =0; i < 5; i++){
-        printf("%d = %d\n",i, pressure[i]);
         pressure[i] = hand_data.pressure(i)-1;
-        printf("%d = %d\n",i, pressure[i]);
     }
-    printf("after for loop\n");
 }
 
 
@@ -253,8 +248,8 @@ int main(void){
         	print_send();
 		send_data();
 		receive();
-		print_recieve();
-		servo_set_val();
+		print_receive();
+		servo_val_set();
 		// servo_write(5);
 		
 		delay(1000);
