@@ -134,8 +134,8 @@ void send_data(){
     if (n < 0) error("Sendto");
 }
 
-void print_in(){
-    printf("finger values\n");
+void print_recieve(){
+	cout << "Start Recieve Data" << endl;
     for(int i =0; i < 5; i++){
         printf("%d = %f\n",i, finger[i]);
     }
@@ -143,6 +143,23 @@ void print_in(){
     for(int i =0; i < 3; i++){
         printf("%d = %f\n",i, wrist[i]);
     }
+	cout << "End of Recieve Data" << endl;
+}
+
+void print_servo() {
+	cout << "Servo Values" << endl;
+	for (int i=0; i<8; i++) {
+		cout << servo_val[i] << endl;
+	}
+	cout << "End of Servo values" << endl;
+}
+
+void print_send() {
+	cout << "Start of Send values" << endl;
+	for (int i =0; i<5; i++) {
+		cout << pressure[i] << endl;
+	}
+	cout << "End of Send values" << endl;
 }
 
 int map(int x, int in_min, int in_max, int out_min, int out_max) {
@@ -214,17 +231,14 @@ int main(void){
 	// servo_setup(8);
 	for(int i =0; i <10; i++){
 		receive();
-		//print_in();
-		// servo_set_val();
+		print_recieve();
+		servo_set_val();
+		print_servo();
 		// servo_write(8);
 		pressure_read(BASE);
 		calc_all(5);
-		
-		for (int i=0; i<5; i++) {
-            		printf("%d = %d\n",i, pressure[i]);
-		}
+		print_send();
 		send_data();
-		
 		delay(1000);
 	}
     close(sock);
