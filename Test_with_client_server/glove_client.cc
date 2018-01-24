@@ -263,7 +263,7 @@ int main(void){
 		print_receive();
 		servo_val_set();
 		//servo_write(5);
-		delay(100);
+		//delay(100);
 	}
 	close(sock);
 	printf("Client Finish!!!\n");
