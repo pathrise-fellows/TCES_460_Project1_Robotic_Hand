@@ -102,6 +102,14 @@ void print_send(void){
 }
 
 void print_receive() {
+	cout << "Pressure Values" << endl;
+	for (int i=0; i<5; i++) {
+		cout << pressure[i] << endl;
+	}
+	cout << "End of Pressure Values" << endl;
+}
+
+void print_servo() {
 	cout << "Servo Values" << endl;
 	for (int i=0; i<5; i++) {
 		cout << servo_val[i] << endl;
