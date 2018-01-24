@@ -194,7 +194,7 @@ void servo_val_set() {
 	for (int i =0; i<5; i++) {
 		servo_val[i] = finger[i];
 	}
-	int c= 6;
+	int c= 5;
 	for (int i =0; i<3; i++){
 		servo_val[c] = wrist[i];
 		c++;
