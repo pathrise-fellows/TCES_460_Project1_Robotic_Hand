@@ -179,7 +179,7 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
-		softPwmCreate(PWM[i],0,imu_read_calc);
+		softPwmCreate(PWM[i],0,range);
 	}
 }
 
