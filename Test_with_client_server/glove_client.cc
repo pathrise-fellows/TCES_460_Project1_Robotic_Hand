@@ -158,6 +158,18 @@ int map(int x, int in_min, int in_max, int out_min, int out_max) {
 	return ret;
 }
 
+int imu_map(int x, int in_min, int in_max, int out_min, int out_max) {
+	int ret =  (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	if (ret > out_max) {
+		ret = out_max-1;
+	}
+	if (ret < out_min) {
+		ret = out_min+1;
+	}
+	ret = out_max-ret;
+	return ret;
+}
+
 void servo_setup(int size) {
 	for (int i=0; i<size; i++) {
 		pinMode(PWM[i],OUTPUT);
@@ -219,7 +231,7 @@ void imu_read_calc() {
 		float heading = 180*atan2(magYcomp,magXcomp)/PI;
 		printf("heading: %f\n", heading);
 		wrist[0] = map((int)outputRoll,ROLLMIN,ROLLMAX,0,range);
-		wrist[1] = map((int)outputPitch,PITCHMIN,PITCHMAX,0,range);
+		wrist[1] = imu_map((int)outputPitch,PITCHMIN,8,0,16);
 		wrist[2] = map((int)heading,YAWMIN,YAWMAX,0,range);
 }
 
