@@ -90,23 +90,22 @@ void server_setup(void){
 }
 
 void print_send(void){
-    cout << "Start of Glove data" << endl;
+    cout << "Start of Finger and Wrist Send data" << endl;
     for(int i =0; i <5; i++){
         printf("%d\n", glove_data.finger(i));
     }
-    printf("wrist\n");
     for(int i =0; i<3;i++){
         printf("%d\n", glove_data.wrist(i));
     }
-	cout << "End of Glove data" << endl;
+	cout << "End of Finger and Wrist Send data" << endl;
 }
 
 void print_receive() {
-	cout << "Pressure Values" << endl;
+	cout << "Pressure Receive Values" << endl;
 	for (int i=0; i<5; i++) {
 		cout << pressure[i] << endl;
 	}
-	cout << "End of Pressure Values" << endl;
+	cout << "End of Pressure Receive Values" << endl;
 }
 
 void print_servo() {
