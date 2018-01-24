@@ -188,7 +188,7 @@ float gyro[3];
 float accel[3];
 float mag[3];
 
-imu_read_calc() {
+void imu_read_calc() {
 		while(!imu.gyroAvailable());
 		imu.readGyro();
 		while(!imu.accelAvailable());
