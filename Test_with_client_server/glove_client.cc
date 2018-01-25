@@ -239,8 +239,6 @@ void imu_read_calc() {
 		wrist[2] = map((int)heading,YAWMIN,YAWMAX,0,range);
 }
 
-
-
 int main(void){
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	server_setup();
