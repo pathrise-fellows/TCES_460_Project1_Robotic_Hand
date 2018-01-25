@@ -41,9 +41,9 @@ int pressure [5]; /// Integer recieved from proto
 LSM9DS1 imu(IMU_MODE_I2C, 0x6b, 0x1e);
 
 float R_DIV = 47000.000f;
-const float STR_R[5]= {8500.00f,8500.00f,12000.00f,8000.00f,8000.00f};
+const float STR_R[5]= {10900.00f,13555.00f,11850.00f,12359.00f,12213.00f};
 //			 pinky ring middle  index  thumb
-const float BEND_R[5] = {18000.00f,21000.00f,40000.00f,21000.00f,16000.00f};
+const float BEND_R[5] = {19500.000f,20000.00f,19000.00f,19000.00f,18000.00f};
 
 const int PWM[8] = {25,24,23,22,21,28,29,26};
 float flex_data[5];
@@ -92,7 +92,8 @@ void server_setup(void){
 void print_send(void){
     cout << "Start of Finger and Wrist Send data" << endl;
     for(int i =0; i <5; i++){
-        printf("%d\n", glove_data.finger(i));
+        printf("finger data: %d", glove_data.finger(i));
+        cout << ", Resis : " << resistance[i] << endl;
     }
     for(int i =0; i<3;i++){
         printf("%d\n", glove_data.wrist(i));
@@ -125,24 +126,28 @@ void send_data(void){
         glove_data.set_wrist(i,wrist[i]+1);
     }
     std::string data;
-	cout << "Sent glove data" << endl;
+	cout << "start Sent glove data" << endl;
     glove_data.SerializeToString(&data);
     sprintf(buffer, "%s", data.c_str());
+    print_send();
+    cout << "Sent glove data" << endl;
     n=sendto(sock,buffer,
             strlen(buffer),0,(const struct sockaddr *)&server,length);
     if (n < 0) error("Sendto");
+    printf("send finish /n");
 }
 void receive(){
     char buffer[max_data_size] = {0};
     n = recvfrom(sock,buffer,max_data_size,0,(struct sockaddr *)&server,&length);
     if (n < 0) error("recvfrom");
-    printf("receive glove_data  \n");
+    printf("receive glove_data\n");
     std::string a = buffer;
     demo::Hand_Server hand_data;
     hand_data.ParseFromString(a);
     for(int i =0; i < 5; i++){
         pressure[i] = hand_data.pressure(i)-1;
     }
+    printf("finish receive glove_data\n");
 }
 
 
@@ -251,34 +256,22 @@ int main(void){
         	fprintf(stderr, "Failed to communicate with LSM9DS1.\n");
         	exit(EXIT_FAILURE);
    	}
-    	imu.calibrate();
-	//servo_setup(5);
+    imu.calibrate();
+	servo_setup(5);
 	while(1) {
 		flex_read(BASE);
 		calc_all(5);
 		imu_read_calc();
-        	print_send();
+        print_send();
 		send_data();
 		receive();
 		print_receive();
 		servo_val_set();
-		//servo_write(5);
-		//delay(100);
+		servo_write(5);
+		delay(300);
 	}
 	close(sock);
 	printf("Client Finish!!!\n");
     
    	return 0;   
 }
-
-
-
-
-
-
-
-
-
-    
-
-
