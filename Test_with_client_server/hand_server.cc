@@ -62,7 +62,7 @@ int R_DIV = 3220;
 float resistance[5];
 float voltage[5];
 //                              pinky ring middle  index  thumb
-const float max_pressure[5] = {8000,8000,10000,8000,11000};
+const float max_pressure[5] = {2000,2000,2000,2000,2000};
 const float min_pressure[5] = {0,0,0,0,0};
 
 
